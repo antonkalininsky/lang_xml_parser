@@ -1,4 +1,5 @@
 QT += core
+QT += xml
 QT -= gui
 
 TARGET = lang_xml_parser
@@ -9,8 +10,11 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES += main.cpp \
-    regexcreator.cpp
+    regexcreator.cpp \
+    xml_parser.cpp
 
 HEADERS += \
-    regexcreator.h
+    regexcreator.h \
+    xml_parser.h \
+    xmladdress.h
 

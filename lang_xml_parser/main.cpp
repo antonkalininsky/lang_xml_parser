@@ -1,24 +1,30 @@
+/* todo:
+ * русский язык
+ * парсер xml
+ * регистр
+ * ui
+ */
 #include <QCoreApplication>
 #include <string>
 #include <regex>
 #include <vector>
 #include <iostream>
 
+#include <QFile>
+#include <QDomDocument>
+#include <QDomElement>
+
 #include "regexcreator.h"
-
-// visualiser
-void visualiser(std::vector<std::string> x) {
-    for (int i = 0; i < x.size(); i++) {
-        std::cout << x[i] << " ";
-    }
-    std::cout << "\n";
-}
-
+#include "xml_parser.h"
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
+    xml_parser pp;
 
+
+
+/*
     // demo 1
     std::cout << regExCreator()("abc") << "\n";
 
@@ -38,6 +44,8 @@ int main(int argc, char *argv[])
         std::cout << "false";
     }
     std::cout << "\n";
+    */
+
 
 
     return a.exec();
