@@ -4,17 +4,19 @@
 #include <string>
 
 struct xmlAddr {
-    int textID,paraTD,sentID,tokenID;
+    std::string textID,paraID,sentID,tokenID;
     std::string word;
-    xmlAddr(int textID = -1,
-            int paraTD = -1,
-            int sentID = -1,
-            int tokenID = -1) {
+    /*
+    xmlAddr(std::string textID = "no ID",
+            std::string paraTD = "no ID",
+            std::string sentID = "no ID",
+            std::string tokenID = "no ID") {
         this->textID = textID;
         this->paraTD = paraTD;
         this->sentID = sentID;
         this->tokenID = tokenID;
     }
+    */
 };
 
 #endif // XMLADDRESS

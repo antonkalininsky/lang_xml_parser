@@ -2,7 +2,12 @@
 #include <QFile>
 #include <QDomDocument>
 #include <QDomElement>
+#include <QTextStream>
 #include <vector>
+
+#include <QXmlStreamReader>
+
+#include <QDebug>
 
 #include <iostream>
 #include <regex>
@@ -21,45 +26,72 @@ xml_parser::xml_parser() {
     if (!f->exists()) return;
     // успешное открытие на чтение
     if (!f->open(QIODevice::ReadOnly)) return;
-    // чтение всей информации из файла в виде массива байтов
-    QByteArray data = f->readAll();
-    QDomDocument doc;
-    // перевод массива байтов в xml формат
-    if (!doc.setContent(data)) {
-        f->close(); // если неуспешно
-        return;
-    }
-    // корневой элемент xml
-    QDomElement docElement = doc.documentElement();
-
-    // дочерние элементы
-    QDomElement textElement = docElement.firstChildElement("text");
-
-    // search
-    while (!textElement.isNull()) {
-        QDomElement parasElement = textElement.firstChildElement("paragraphs");
-        QDomElement paraElement = parasElement.firstChildElement("paragraph");
-        while (!paraElement.isNull()) {
-            QDomElement sentenceElement = paraElement.firstChildElement("sentence");
-            while (!sentenceElement.isNull()) {
-                QDomElement tokensElement = sentenceElement.firstChildElement("tokens");
-                QDomElement tokenElement = tokensElement.firstChildElement("token");
-                while(!tokenElement.isNull()) {
-                    if (std::regex_search(tokenElement.attribute("text", "error").toStdString(),
-                                          std::regex(regExCreator()("abc")))) {
-                        std::cout << textElement.attribute("id", "error").toStdString() << "   ";
-                        std::cout << paraElement.attribute("id", "error").toStdString() << "   ";
-                        std::cout << sentenceElement.attribute("id", "error").toStdString() << "   ";
-                        std::cout << tokenElement.attribute("id", "error").toStdString() << "   ";
-                        std::cout << tokenElement.attribute("text", "error").toStdString() << "\n";
-                    }
-                    tokenElement = tokenElement.nextSiblingElement();
+    QXmlStreamReader reader(f);
+    std::string textID,paragraphID,sentenceID,tokenID;
+    // the scan
+    while(!reader.atEnd()) {
+        reader.readNext();
+        if (reader.tokenType() == QXmlStreamReader::StartElement) {
+            // update ids
+            QXmlStreamAttributes attr = reader.attributes();
+            if (reader.name() == "text") {
+                if (attr.hasAttribute("id")) {
+                    textID = attr.value("id").toString().toStdString();
+                } else {
+                    textID = "noID";
                 }
-                sentenceElement = sentenceElement.nextSiblingElement();
             }
-            paraElement = paraElement.nextSiblingElement();
+            if (reader.name() == "paragraph") {
+                if (attr.hasAttribute("id")) {
+                    paragraphID = attr.value("id").toString().toStdString();
+                } else {
+                    paragraphID = "noID";
+                }
+            }
+            if (reader.name() == "sentence") {
+                if (attr.hasAttribute("id")) {
+                    sentenceID = attr.value("id").toString().toStdString();
+                } else {
+                    sentenceID = "noID";
+                }
+            }
+            if (reader.name() == "token") {
+                if (attr.hasAttribute("id")) {
+                    tokenID = attr.value("id").toString().toStdString();
+                } else {
+                    tokenID = "noID";
+                }
+            }
+            // actual check
+            if (reader.name() == "token") {
+                // get text
+                std::string text;
+                if (attr.hasAttribute("text")) {
+                    text = attr.value("text").toString().toStdString();
+                } else {
+                    text = "no text";
+                }
+                // check text
+                if (std::regex_search(text, std::regex("Школа"))) {
+                    rslt.push_back(xmlAddr());
+                    rslt[rslt.size() - 1].textID = textID;
+                    rslt[rslt.size() - 1].paraID = paragraphID;
+                    rslt[rslt.size() - 1].sentID = sentenceID;
+                    rslt[rslt.size() - 1].tokenID = tokenID;
+                    rslt[rslt.size() - 1].word = text;
+                }
+            }
         }
-        textElement = textElement.nextSiblingElement();
+    }
+
+    // rslt
+    std::cout << "found rslts:\n";
+    for (int i = 0; i < rslt.size(); i++) {
+        std::cout << rslt[i].textID << " ";
+        std::cout << rslt[i].paraID << " ";
+        std::cout << rslt[i].sentID << " ";
+        std::cout << rslt[i].tokenID << " ";
+        std::cout << rslt[i].word << "\n";
     }
 
     f->close();
