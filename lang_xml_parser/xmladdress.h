@@ -1,22 +1,11 @@
 #ifndef XMLADDRESS
 #define XMLADDRESS
 
-#include <string>
+#include <QString>
 
 struct xmlAddr {
-    std::string textID,paraID,sentID,tokenID;
-    std::string word;
-    /*
-    xmlAddr(std::string textID = "no ID",
-            std::string paraTD = "no ID",
-            std::string sentID = "no ID",
-            std::string tokenID = "no ID") {
-        this->textID = textID;
-        this->paraTD = paraTD;
-        this->sentID = sentID;
-        this->tokenID = tokenID;
-    }
-    */
+    QString textID,paraID,sentID,tokenID;
+    QString word;
 };
 
 #endif // XMLADDRESS

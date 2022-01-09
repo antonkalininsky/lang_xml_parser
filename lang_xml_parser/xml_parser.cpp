@@ -15,8 +15,12 @@
 
 #include "xmladdress.h"
 
-xml_parser::xml_parser() {
+#include <windows.h>
+#include <locale>
+#include <QRegExp>
 
+
+xml_parser::xml_parser() {
     // тут будем хранить результаты поиска
     std::vector<xmlAddr> rslt;
 
@@ -27,7 +31,7 @@ xml_parser::xml_parser() {
     // успешное открытие на чтение
     if (!f->open(QIODevice::ReadOnly)) return;
     QXmlStreamReader reader(f);
-    std::string textID,paragraphID,sentenceID,tokenID;
+    QString textID,paragraphID,sentenceID,tokenID;
     // the scan
     while(!reader.atEnd()) {
         reader.readNext();
@@ -36,28 +40,28 @@ xml_parser::xml_parser() {
             QXmlStreamAttributes attr = reader.attributes();
             if (reader.name() == "text") {
                 if (attr.hasAttribute("id")) {
-                    textID = attr.value("id").toString().toStdString();
+                    textID = attr.value("id").toString();
                 } else {
                     textID = "noID";
                 }
             }
             if (reader.name() == "paragraph") {
                 if (attr.hasAttribute("id")) {
-                    paragraphID = attr.value("id").toString().toStdString();
+                    paragraphID = attr.value("id").toString();
                 } else {
                     paragraphID = "noID";
                 }
             }
             if (reader.name() == "sentence") {
                 if (attr.hasAttribute("id")) {
-                    sentenceID = attr.value("id").toString().toStdString();
+                    sentenceID = attr.value("id").toString();
                 } else {
                     sentenceID = "noID";
                 }
             }
             if (reader.name() == "token") {
                 if (attr.hasAttribute("id")) {
-                    tokenID = attr.value("id").toString().toStdString();
+                    tokenID = attr.value("id").toString();
                 } else {
                     tokenID = "noID";
                 }
@@ -65,14 +69,16 @@ xml_parser::xml_parser() {
             // actual check
             if (reader.name() == "token") {
                 // get text
-                std::string text;
+                QString text;
                 if (attr.hasAttribute("text")) {
-                    text = attr.value("text").toString().toStdString();
+                    text = attr.value("text").toString();
                 } else {
                     text = "no text";
                 }
-                // check text
-                if (std::regex_search(text, std::regex("Школа"))) {
+
+                QRegExp rx("[а-я]кола|так");
+
+                if (rx.exactMatch(text.toLower())) {
                     rslt.push_back(xmlAddr());
                     rslt[rslt.size() - 1].textID = textID;
                     rslt[rslt.size() - 1].paraID = paragraphID;
@@ -84,18 +90,8 @@ xml_parser::xml_parser() {
         }
     }
 
-    // rslt
-    std::cout << "found rslts:\n";
-    for (int i = 0; i < rslt.size(); i++) {
-        std::cout << rslt[i].textID << " ";
-        std::cout << rslt[i].paraID << " ";
-        std::cout << rslt[i].sentID << " ";
-        std::cout << rslt[i].tokenID << " ";
-        std::cout << rslt[i].word << "\n";
-    }
 
     f->close();
     delete f;
     return;
 }
-

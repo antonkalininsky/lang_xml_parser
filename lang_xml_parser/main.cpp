@@ -14,39 +14,29 @@
 #include <QDomDocument>
 #include <QDomElement>
 
+#include <QString>
+
 #include "regexcreator.h"
 #include "xml_parser.h"
+
+#include <windows.h>
+#include <locale>
+
+#include <QLocale>
+
+#include <QDebug>
+
+#include <QTextCodec>
 
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
+
+    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+    QTextCodec::setCodecForLocale(codec);
+
+
     xml_parser pp;
-
-
-
-/*
-    // demo 1
-    std::cout << regExCreator()("abc") << "\n";
-
-    // demo 2
-    std::regex RE(regExCreator()("abc"));
-
-    if (std::regex_search("abcdefg", RE)) {
-        std::cout << "true";
-    } else {
-        std::cout << "false";
-    }
-    std::cout << "\n";
-
-    if (std::regex_search("efg", RE)) {
-        std::cout << "true";
-    } else {
-        std::cout << "false";
-    }
-    std::cout << "\n";
-    */
-
-
 
     return a.exec();
 }
