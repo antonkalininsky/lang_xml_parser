@@ -17,7 +17,7 @@ QString xml_parser::operator()(QString word) {
     QRegExp rx(regExCreator()(word));
 
     // открываем файл
-    QFile f("temp.xml");
+    QFile f("template.xml");
     if (!f.exists()) return "error";
     if (!f.open(QIODevice::ReadOnly)) return "error";
 

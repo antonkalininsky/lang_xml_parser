@@ -24,8 +24,10 @@ private:
     QLabel *labelRslt;
     QTextEdit *textRslt;
     QVBoxLayout *layoutButtons;
-    QVBoxLayout *layoutInOut;
+    QVBoxLayout *layoutIn;
+    QVBoxLayout *layoutOut;
     QBoxLayout *mainLayout;
+    QHBoxLayout *layoutGr;
 
 private slots:
     void doSearch();

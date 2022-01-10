@@ -5,7 +5,7 @@ QT += gui
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = lang_xml_parser
-CONFIG += console
+CONFIG -= console
 CONFIG += C++11
 CONFIG -= app_bundle
 

@@ -13,7 +13,6 @@ int main(int argc, char *argv[])
     QTextCodec *codec = QTextCodec::codecForName("UTF-8");
     QTextCodec::setCodecForLocale(codec);
 
-
     // main window
     QMainWindow window;
     window.resize(500, 300);

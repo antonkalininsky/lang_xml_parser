@@ -1,5 +1,6 @@
 #include "gui.h"
 #include "xml_parser.h"
+#include <windows.h>
 
 GUI::GUI(QApplication *app) {
     // buttons
@@ -23,17 +24,26 @@ GUI::GUI(QApplication *app) {
     layoutButtons->addStretch();
 
     // input and output layout
-    layoutInOut = new QVBoxLayout();
-    layoutInOut->addWidget(labelFind);
-    layoutInOut->addWidget(lineEditFind);
-    layoutInOut->addWidget(labelRslt);
-    layoutInOut->addWidget(textRslt);
-    layoutInOut->addStretch();
+    layoutIn = new QVBoxLayout();
+    layoutIn->addWidget(labelFind);
+    layoutIn->addWidget(lineEditFind);
+    layoutIn->addStretch();
+
+    // input and output layout
+    layoutOut = new QVBoxLayout();
+    layoutOut->addWidget(labelRslt);
+    layoutOut->addWidget(textRslt);
+    layoutOut->addStretch();
+
+    // layout group
+    layoutGr = new QHBoxLayout();
+    layoutGr->addLayout(layoutIn);
+    layoutGr->addLayout(layoutButtons);
 
     // main layout
-    mainLayout = new QBoxLayout(QBoxLayout::LeftToRight);
-    mainLayout->addLayout(layoutInOut);
-    mainLayout->addLayout(layoutButtons);
+    mainLayout = new QBoxLayout(QBoxLayout::TopToBottom);
+    mainLayout->addLayout(layoutGr);
+    mainLayout->addLayout(layoutOut);
     setLayout(mainLayout);
 }
 
@@ -51,6 +61,10 @@ void GUI::doSearch() {
     textRslt->insertPlainText("Search in process! Please wait...");
     QString searchRslt = xml_parser()(userInput);
     textRslt->clear();
-    textRslt->insertPlainText(searchRslt);
+    if (searchRslt.isEmpty()) {
+        textRslt->insertPlainText("No results!");
+    } else {
+        textRslt->insertPlainText(searchRslt);
+    }
 }
 
