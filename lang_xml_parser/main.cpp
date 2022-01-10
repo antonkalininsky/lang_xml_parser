@@ -1,21 +1,30 @@
-/* todo:
- * ui
- */
-
-#include <QCoreApplication>
-#include "xml_parser.h"
+#include <QApplication>
 #include <QTextCodec>
+#include <QMainWindow>
+
+#include "xml_parser.h"
+#include "gui.h"
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    QApplication a(argc, argv);
 
     // настройка русского языка для работы regEx
     QTextCodec *codec = QTextCodec::codecForName("UTF-8");
     QTextCodec::setCodecForLocale(codec);
 
-    // непосредственно поиск
-    std::vector<xmlAddr> abc = xml_parser()("Школа");
+
+    // main window
+    QMainWindow window;
+    window.resize(500, 300);
+
+    // gui
+    GUI *userInter = new GUI(&a);
+
+    // main window visualisation
+    window.setCentralWidget(userInter);
+    window.setWindowTitle("Word Finder");
+    window.show();
 
     return a.exec();
 }

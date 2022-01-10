@@ -9,7 +9,9 @@ class xml_parser
 {
 public:
     xml_parser();
-    std::vector<xmlAddr> operator()(QString word);
+    QString operator()(QString word);
+private:
+    QString createString(std::vector<xmlAddr> r);
 };
 
 #endif // XML_PARSER_H

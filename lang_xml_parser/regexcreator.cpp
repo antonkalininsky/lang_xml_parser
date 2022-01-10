@@ -11,6 +11,9 @@ std::vector<QString> regExCreator::searchRules(QString w) {
     QString buf;
     QString d = "[а-я]";
 
+    // нижний регистр
+    w = w.toLower();
+
     // правило 0:
     // само слово "abc"
     r.push_back(w);

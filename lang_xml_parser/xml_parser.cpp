@@ -9,7 +9,7 @@
 
 xml_parser::xml_parser() {}
 
-std::vector<xmlAddr> xml_parser::operator()(QString word) {
+QString xml_parser::operator()(QString word) {
     // контейнер для хранения результата поиска
     std::vector<xmlAddr> rslt;
 
@@ -18,8 +18,8 @@ std::vector<xmlAddr> xml_parser::operator()(QString word) {
 
     // открываем файл
     QFile f("temp.xml");
-    if (!f.exists()) return rslt;
-    if (!f.open(QIODevice::ReadOnly)) return rslt;
+    if (!f.exists()) return "error";
+    if (!f.open(QIODevice::ReadOnly)) return "error";
 
     // готовимся к парсингу
     QXmlStreamReader reader(&f);
@@ -78,5 +78,20 @@ std::vector<xmlAddr> xml_parser::operator()(QString word) {
         }
     }
 
-    return rslt;
+    return createString(rslt);
+}
+
+QString xml_parser::createString(std::vector<xmlAddr> r) {
+    QString str;
+    int cou = 1;
+    for (auto i : r) {
+        str += "# " + QString::number(cou++) +
+                "   " + "textID: " + i.textID +
+                "   " + "parID: " + i.paraID +
+                "   " + "sentID: " + i.sentID +
+                "   " + "tokenID: " + i.tokenID +
+                "   " + "word: " + i.word +
+                "\n";
+    }
+    return str;
 }

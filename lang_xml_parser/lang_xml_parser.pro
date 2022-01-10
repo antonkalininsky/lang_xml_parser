@@ -1,6 +1,8 @@
 QT += core
 QT += xml
-QT -= gui
+QT += gui
+
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = lang_xml_parser
 CONFIG += console
@@ -11,10 +13,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     regexcreator.cpp \
-    xml_parser.cpp
+    xml_parser.cpp \
+    gui.cpp
 
 HEADERS += \
     regexcreator.h \
     xml_parser.h \
-    xmladdress.h
+    xmladdress.h \
+    gui.h
 
