@@ -1,17 +1,17 @@
 #ifndef REGEXCREATOR_H
 #define REGEXCREATOR_H
 
-#include <string>
+#include <QString>
 #include <vector>
 
 class regExCreator
 {
 public:
     regExCreator();
-    std::string operator()(std::string w);
+    QString operator()(QString w);
 private:
-    std::vector<std::string> searchRules(std::string w);
-    std::string strCompiler(std::vector<std::string> sAdd);
+    std::vector<QString> searchRules(QString w);
+    QString strCompiler(std::vector<QString> sAdd);
 };
 
 #endif // REGEXCREATOR_H

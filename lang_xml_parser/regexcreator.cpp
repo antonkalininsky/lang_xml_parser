@@ -2,14 +2,14 @@
 
 regExCreator::regExCreator() {}
 
-std::string regExCreator::operator()(std::string w) {
+QString regExCreator::operator()(QString w) {
     return strCompiler(searchRules(w));
 }
 
-std::vector<std::string> regExCreator::searchRules(std::string w) {
-    std::vector<std::string> r;
-    std::string buf;
-    std::string d = "[a-z]";
+std::vector<QString> regExCreator::searchRules(QString w) {
+    std::vector<QString> r;
+    QString buf;
+    QString d = "[а-я]";
 
     // правило 0:
     // само слово "abc"
@@ -19,7 +19,8 @@ std::vector<std::string> regExCreator::searchRules(std::string w) {
     // изменена одна буква на любую "[a-z]bc" + "a[a-z]c" + "ab[a-z]"
     for (int i = 0 ; i < w.length(); i++) {
         buf = w;
-        buf.erase(buf.begin() + i);
+        //buf.erase(buf.begin() + i);
+        buf.remove(i, 1);
         buf.insert(i, d);
         r.push_back(buf);
     }
@@ -28,7 +29,8 @@ std::vector<std::string> regExCreator::searchRules(std::string w) {
     // убрана любая буква "bc" + "ac" + "ab"
     for (int i = 0 ; i < w.length(); i++) {
         buf = w;
-        buf.erase(buf.begin() + i);
+        //buf.erase(buf.begin() + i);
+        buf.remove(i, 1);
         r.push_back(buf);
     }
 
@@ -45,8 +47,8 @@ std::vector<std::string> regExCreator::searchRules(std::string w) {
     return r;
 }
 
-std::string regExCreator::strCompiler(std::vector<std::string> sAdd) {
-    std::string s;
+QString regExCreator::strCompiler(std::vector<QString> sAdd) {
+    QString s;
     for (int i = 0; i < sAdd.size(); i++) {
         s += sAdd[i];
         if (i < sAdd.size() - 1) {

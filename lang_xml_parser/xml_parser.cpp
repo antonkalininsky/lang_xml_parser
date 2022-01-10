@@ -1,42 +1,35 @@
 #include "xml_parser.h"
 #include <QFile>
-#include <QDomDocument>
-#include <QDomElement>
 #include <QTextStream>
 #include <vector>
-
 #include <QXmlStreamReader>
-
-#include <QDebug>
-
-#include <iostream>
-#include <regex>
 #include "regexcreator.h"
-
 #include "xmladdress.h"
-
-#include <windows.h>
-#include <locale>
 #include <QRegExp>
 
+xml_parser::xml_parser() {}
 
-xml_parser::xml_parser() {
-    // тут будем хранить результаты поиска
+std::vector<xmlAddr> xml_parser::operator()(QString word) {
+    // контейнер для хранения результата поиска
     std::vector<xmlAddr> rslt;
 
-    // выделяем память
-    QFile *f = new QFile("temp.xml");
-    // файл существует
-    if (!f->exists()) return;
-    // успешное открытие на чтение
-    if (!f->open(QIODevice::ReadOnly)) return;
-    QXmlStreamReader reader(f);
+    // регулярное выражение для поиска
+    QRegExp rx(regExCreator()(word));
+
+    // открываем файл
+    QFile f("temp.xml");
+    if (!f.exists()) return rslt;
+    if (!f.open(QIODevice::ReadOnly)) return rslt;
+
+    // готовимся к парсингу
+    QXmlStreamReader reader(&f);
     QString textID,paragraphID,sentenceID,tokenID;
-    // the scan
+
+    // основной цикл парсинга
     while(!reader.atEnd()) {
         reader.readNext();
         if (reader.tokenType() == QXmlStreamReader::StartElement) {
-            // update ids
+            // чтение idшников
             QXmlStreamAttributes attr = reader.attributes();
             if (reader.name() == "text") {
                 if (attr.hasAttribute("id")) {
@@ -65,19 +58,14 @@ xml_parser::xml_parser() {
                 } else {
                     tokenID = "noID";
                 }
-            }
-            // actual check
-            if (reader.name() == "token") {
-                // get text
+                // получение текста
                 QString text;
                 if (attr.hasAttribute("text")) {
                     text = attr.value("text").toString();
                 } else {
                     text = "no text";
                 }
-
-                QRegExp rx("[а-я]кола|так");
-
+                // сравнение с регулярным выражением и сохранение результата
                 if (rx.exactMatch(text.toLower())) {
                     rslt.push_back(xmlAddr());
                     rslt[rslt.size() - 1].textID = textID;
@@ -90,8 +78,5 @@ xml_parser::xml_parser() {
         }
     }
 
-
-    f->close();
-    delete f;
-    return;
+    return rslt;
 }
