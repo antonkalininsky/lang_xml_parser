@@ -9,17 +9,14 @@
 
 xml_parser::xml_parser() {}
 
-QString xml_parser::operator()(QString word) {
-    // контейнер для хранения результата поиска
-    std::vector<xmlAddr> rslt;
-
-    // регулярное выражение для поиска
-    QRegExp rx(regExCreator()(word));
+int xml_parser::operator()(std::vector<xmlAddr> &v, QString file) {
+    // очистка контейнера для хранения результата парсинга
+    v.clear();
 
     // открываем файл
-    QFile f("template.xml");
-    if (!f.exists()) return "error";
-    if (!f.open(QIODevice::ReadOnly)) return "error";
+    QFile f(file);
+    if (!f.exists()) return -1; // don't exist
+    if (!f.open(QIODevice::ReadOnly)) return -2; // can't open
 
     // готовимся к парсингу
     QXmlStreamReader reader(&f);
@@ -65,33 +62,17 @@ QString xml_parser::operator()(QString word) {
                 } else {
                     text = "no text";
                 }
-                // сравнение с регулярным выражением и сохранение результата
-                if (rx.exactMatch(text.toLower())) {
-                    rslt.push_back(xmlAddr());
-                    rslt[rslt.size() - 1].textID = textID;
-                    rslt[rslt.size() - 1].paraID = paragraphID;
-                    rslt[rslt.size() - 1].sentID = sentenceID;
-                    rslt[rslt.size() - 1].tokenID = tokenID;
-                    rslt[rslt.size() - 1].word = text;
-                }
+                // сохранение результата
+                xmlAddr buf;
+                buf.textID = textID;
+                buf.textID = textID;
+                buf.paraID = paragraphID;
+                buf.sentID = sentenceID;
+                buf.tokenID = tokenID;
+                buf.word = text;
+                v.push_back(buf);
             }
         }
     }
-
-    return createString(rslt);
-}
-
-QString xml_parser::createString(std::vector<xmlAddr> r) {
-    QString str;
-    int cou = 1;
-    for (auto i : r) {
-        str += "# " + QString::number(cou++) +
-                "   " + "textID: " + i.textID +
-                "   " + "parID: " + i.paraID +
-                "   " + "sentID: " + i.sentID +
-                "   " + "tokenID: " + i.tokenID +
-                "   " + "word: " + i.word +
-                "\n";
-    }
-    return str;
+    return 0;
 }

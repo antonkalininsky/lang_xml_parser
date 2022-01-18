@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     window.resize(500, 300);
 
     // gui
-    GUI *userInter = new GUI(&a);
+    GUI *userInter = new GUI();
 
     // main window visualisation
     window.setCentralWidget(userInter);

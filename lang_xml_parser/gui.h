@@ -9,16 +9,16 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QTextEdit>
-//???
-#include <QToolButton>
+#include <vector>
+#include "xmladdress.h"
 
 class GUI : public QWidget {
     Q_OBJECT
 public:
-    GUI(QApplication *app);
+    GUI();
 private:
+    QPushButton *buttonFile;
     QPushButton *buttonSearch;
-    QPushButton *buttonQuit;
     QLabel *labelFind;
     QLineEdit *lineEditFind;
     QLabel *labelRslt;
@@ -28,9 +28,18 @@ private:
     QVBoxLayout *layoutOut;
     QBoxLayout *mainLayout;
     QHBoxLayout *layoutGr;
+    QString fileName;
+
+    std::vector<xmlAddr> parsingRslt;
+
+    QString createString(std::vector<xmlAddr> r);
+    std::vector<xmlAddr> theSearch(QString in);
+
+
 
 private slots:
     void doSearch();
+    void chooseFile();
 
 
 };
